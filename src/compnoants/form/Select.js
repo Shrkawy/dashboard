@@ -1,4 +1,4 @@
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 import React from "react";
 import {
@@ -20,19 +20,20 @@ const useStyles = makeStyles((theme) => ({
 const Select = (props) => {
   const classes = useStyles();
   const { name, control, error, label, id, items, helperText } = props;
+  const { getValues } = useFormContext();
 
   return (
     <Grid item xs={12} md={6} lg={12}>
       <Controller
         name={name}
         control={control}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onChange } }) => (
           <FormControl error={error} fullWidth className={classes.formControl}>
             <InputLabel id={id}>{label}</InputLabel>
             <MuiSelect
               labelId={id}
               label={label}
-              value={value || ""}
+              value={getValues(name) || ""}
               onChange={onChange}
               variant="filled"
             >

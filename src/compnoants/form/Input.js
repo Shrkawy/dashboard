@@ -1,8 +1,10 @@
 import React from "react";
 import { Grid, InputAdornment, TextField } from "@material-ui/core";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 const Input = (props) => {
+  const { getValues } = useFormContext();
+
   return (
     <Grid item xs={12}>
       <Controller
@@ -12,6 +14,7 @@ const Input = (props) => {
           <TextField
             {...props}
             fullWidth
+            value={getValues(props.name) || ""}
             label={props.label}
             onChange={onChange}
             variant="outlined"

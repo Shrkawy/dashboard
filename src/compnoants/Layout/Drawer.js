@@ -1,4 +1,5 @@
-import React from "react";
+import { useContext } from "react";
+import { NavLink } from "react-router-dom";
 import {
   Divider,
   Drawer as MuiDrawer,
@@ -16,7 +17,8 @@ import LocalMallIcon from "@material-ui/icons/LocalMall";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MessageIcon from "@material-ui/icons/Message";
 import SettingsIcon from "@material-ui/icons/Settings";
-import { NavLink } from "react-router-dom";
+import ExitToAppTwoToneIcon from "@material-ui/icons/ExitToAppTwoTone";
+import { AuthContext } from "../../context/auth-context";
 
 const drawerWidth = 240;
 
@@ -53,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: "5px",
     },
   },
+  logoutBtn: {
+    width: "100%",
+  },
 }));
 
 const listItems = [
@@ -64,6 +69,7 @@ const listItems = [
 ];
 
 const Drawer = (props) => {
+  const { logout } = useContext(AuthContext);
   const classes = useStyles();
   const { window } = props;
   const theme = useTheme();
@@ -75,51 +81,59 @@ const Drawer = (props) => {
           Shark<span>Board</span>
         </h3>
       </div>
-        <List>
-          {listItems.map((item) =>
-            item.exact ? (
-              <ListItem
-                button
-                component={NavLink}
-                to={item.to}
-                exact
-                key={item.title}
-                className={classes.listItem}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} />
-              </ListItem>
-            ) : (
-              <ListItem
-                component={NavLink}
-                button
-                to={item.to}
-                key={item.title}
-                className={classes.listItem}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} />
-              </ListItem>
-            )
-          )}
-        </List>
-        <Divider />
-        <List>
-          {["Settings"].map((text) => (
+      <List>
+        {listItems.map((item) =>
+          item.exact ? (
             <ListItem
               button
-              to="/settings"
-              key={text}
               component={NavLink}
+              to={item.to}
+              exact
+              key={item.title}
               className={classes.listItem}
             >
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.title} />
             </ListItem>
-          ))}
-        </List>
+          ) : (
+            <ListItem
+              component={NavLink}
+              button
+              to={item.to}
+              key={item.title}
+              className={classes.listItem}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.title} />
+            </ListItem>
+          )
+        )}
+      </List>
+      <Divider />
+      <List>
+        {["Settings"].map((text) => (
+          <ListItem
+            button
+            to="/settings"
+            key={text}
+            component={NavLink}
+            className={classes.listItem}
+          >
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <List className={classes.logoutBtn}>
+        <ListItem button component={NavLink} to="/" onClick={() => logout()}>
+          <ListItemIcon>
+            <ExitToAppTwoToneIcon />
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItem>
+      </List>
     </div>
   );
 

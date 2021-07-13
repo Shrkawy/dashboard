@@ -1,3 +1,5 @@
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   ButtonGroup,
@@ -6,15 +8,15 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import DataGrid from "../compnoants/DataGrid";
-import React, { useState } from "react";
-import Paper from "../compnoants/UI/Paper";
-import ProductsData from "../data/ProductsData";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { SelectAll } from "@material-ui/icons";
-import { useLogicGrid } from "../hooks/useGrid";
-import { Link } from "react-router-dom";
+import DataGrid from "../compnoants/DataGrid";
+import Paper from "../compnoants/UI/Paper";
+import { useDataGridSelection } from "../hooks/useDataGridSelection";
+import Loading from "../compnoants/UI/Loading";
+import { AuthContext } from "../context/auth-context";
+import { useHttpClint } from "../hooks/send-request";
 
 const useStyles = makeStyles((theme) => ({
   dataGridContainer: {
@@ -39,16 +41,25 @@ const useStyles = makeStyles((theme) => ({
 const Products = () => {
   const classes = useStyles();
 
-  const [products, setProducts] = useState({ selectionModel: [] });
+  const [selection, setSelection] = useState({ selectionModel: [] });
+  const { userId } = useContext(AuthContext);
+  const { error, isLoading, resData, sendReuest } = useHttpClint();
 
-  const [
-    showSelect,
-    handleShowSelection,
-    disableDeleteBtn,
-    handleMultiDelete,
-  ] = useLogicGrid(products);
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        await sendReuest("get", `/${userId}/products`);
+      } catch (err) {}
+    };
 
-  const handleSetSelection = (selection) => setProducts(selection);
+    getProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [showSelect, handleShowSelection, disableDeleteBtn, handleMultiDelete] =
+    useDataGridSelection(selection);
+
+  const handleSetSelection = (selection) => setSelection(selection);
 
   return (
     <Paper>
@@ -91,14 +102,19 @@ const Products = () => {
           </ButtonGroup>
         </Grid>
         <Grid item xs={12} className={classes.dataGridContainer}>
-          <DataGrid
-            onSelectionModelChange={(selection) =>
-              handleSetSelection(selection)
-            }
-            select={showSelect}
-            products
-            data={ProductsData}
-          />
+          {isLoading && <Loading />}
+          {resData && (
+            <DataGrid
+              onSelectionModelChange={(selection) =>
+                handleSetSelection(selection)
+              }
+              select={showSelect}
+              products
+              data={resData.data}
+            />
+          )}
+
+          {error && <Typography color="error">{error}</Typography>}
         </Grid>
       </Grid>
     </Paper>

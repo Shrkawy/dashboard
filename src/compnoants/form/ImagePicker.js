@@ -1,4 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   Button,
   FormHelperText,
@@ -9,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { CloudUpload } from "@material-ui/icons";
 import { useDropzone } from "react-dropzone";
-import FormControl from "../FormControl";
+import FormControl from "./FormControl";
 import ProgressBar from "./ProgressBar";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +38,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ImagePicker(props) {
-  const classes = useStyles();
-
   const { images, setImages, setImagesArray, helperText } = props;
+  const classes = useStyles();
+  const [existedImages, setExistedImages] = useState([]);
+  const { getValues } = useFormContext();
+
+  useEffect(() => {
+    setExistedImages(getValues("images"));
+  }, [getValues]);
 
   const onDrop = useCallback(
     (accImages, rejImages) => {
@@ -213,11 +219,21 @@ export default function ImagePicker(props) {
           </RootRef>
         </Grid>
         <Grid item xs={12} md={6}>
+          {existedImages &&
+            existedImages.map((image) => (
+              <ProgressBar
+                existed
+                setImagesArray={setImagesArray}
+                image={image}
+                key={image.id}
+              />
+            ))}
           {images &&
             images.map((item, i) => (
               <ProgressBar
                 setImagesArray={setImagesArray}
                 setImages={setImages}
+                images={images}
                 key={i}
                 image={item.image}
                 preview={item.preview}

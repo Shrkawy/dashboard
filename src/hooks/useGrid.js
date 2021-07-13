@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, makeStyles } from "@material-ui/core";
+import { Avatar, Button, makeStyles, Typography } from "@material-ui/core";
 import { Delete, Edit } from "@material-ui/icons";
 import Status from "../compnoants/UI/Status";
 
@@ -47,161 +47,203 @@ const useStyles = makeStyles((theme) => ({
       minWidth: "fit-content",
     },
   },
+  productName: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "100%",
+    "& img": {
+      width: theme.spacing(5),
+      height: theme.spacing(5),
+    },
+    "& p": {
+      marginLeft: theme.spacing(2),
+    },
+  },
 }));
+
+function handleCellDelete(params) {
+  console.log(params);
+}
+
+function handleCellEdit(params) {
+  console.log(params);
+}
 
 export const useGrid = (orders, products, customers, rows) => {
   const classes = useStyles();
-  const productColumns = [
-    { field: "productName", headerName: "Product Name", width: 250 },
-    {
-      field: "category",
-      headerName: "Category",
-      width: 150,
-    },
-    {
-      field: "price",
-      headerName: "Price",
-      width: 100,
-      renderCell: (params) => `$ ${params.value}`,
-    },
-    {
-      field: "stock",
-      headerName: "Stock",
-      width: 100,
-    },
-    {
-      field: "sold",
-      headerName: "Sold",
-      width: 100,
-    },
-    {
-      field: "revenue",
-      headerName: "Revenue",
-      width: 140,
-      renderCell: (params) => `$ ${params.value}`,
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 120,
-      renderCell: (params) => (
-        <div className={classes.btns}>
-          <Button variant="text" color="primary">
-            <Edit fontSize="small" />
-          </Button>
-          <Button variant="text" color="secondary">
-            <Delete fontSize="small" />
-          </Button>
-        </div>
-      ),
-    },
-  ];
+  if (products) {
+    const productColumns = [
+      {
+        field: "productName",
+        headerName: "Product Name",
+        width: 250,
+        renderCell: (params) => (
+          <div className={classes.productName}>
+            <Avatar variant="rounded" src={params.row.images[0]} />
+            <Typography variant="body2">{params.value}</Typography>
+          </div>
+        ),
+      },
+      {
+        field: "category",
+        headerName: "Category",
+        width: 200,
+      },
+      {
+        field: "price",
+        headerName: "Price",
+        width: 150,
+        renderCell: (params) => `$ ${params.value}`,
+      },
+      {
+        field: "stock",
+        headerName: "Stock",
+        width: 150,
+      },
+      {
+        field: "sold",
+        headerName: "Sold",
+        width: 150,
+      },
+      {
+        field: "revenue",
+        headerName: "Revenue",
+        width: 160,
+        renderCell: (params) =>
+          `$ ${params.row.price - params.row.originalPrice}`,
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        width: 142,
+        renderCell: (params) => (
+          <div className={classes.btns}>
+            <Button
+              variant="text"
+              color="primary"
+              onClick={() => handleCellEdit(params)}
+            >
+              <Edit fontSize="small" />
+            </Button>
+            <Button
+              variant="text"
+              color="secondary"
+              onClick={() => handleCellDelete(params)}
+            >
+              <Delete fontSize="small" />
+            </Button>
+          </div>
+        ),
+      },
+    ];
 
-  const orderColumns = [
-    {
-      field: "id",
-      headerName: "ID",
-      width: 120,
-      renderCell: (params) => `#${params.value}`,
-    },
-    {
-      field: "date",
-      headerName: "Date",
-      width: 140,
-      renderCell: (params) => convertToNormalDate(params.value),
-    },
-    { field: "customerName", headerName: "Customer Name", width: 190 },
-    { field: "products", headerName: "Products", width: 150 },
-    {
-      field: "price",
-      headerName: "Price",
-      width: 100,
-      renderCell: (params) => `$ ${params.value}`,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-      renderCell: (params) => convertStatusToIcon(params.value),
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 120,
-      renderCell: () => (
-        <div className={classes.btns}>
-          <Button variant="text" color="primary">
-            <Edit fontSize="small" />
-          </Button>
-          <Button variant="text" color="secondary">
-            <Delete fontSize="small" />
-          </Button>
-        </div>
-      ),
-    },
-  ];
+    return { columns: productColumns, rows };
+  }
 
-  const customersColumns = [
-    {
-      field: "id",
-      headerName: "ID",
-      width: 80,
-      renderCell: (params) => `#${params.value}`,
-    },
-    {
-      field: "spent",
-      headerName: "Spent",
-      width: 110,
-      renderCell: (params) => `$${params.value}`,
-    },
-    { field: "customerName", headerName: "Customer Name", width: 190 },
-    {
-      field: "lastOrder",
-      headerName: "Last Order",
-      width: 150,
-      renderCell: (params) => convertToNormalDate(params.value),
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 240,
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
-      width: 160,
-    },
-    {
-      field: "country",
-      headerName: "Country",
-      width: 120,
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 125,
-      renderCell: () => (
-        <div className={classes.btns}>
-          <Button variant="text" color="primary">
-            <Edit fontSize="small" />
-          </Button>
-          <Button variant="text" color="secondary">
-            <Delete fontSize="small" />
-          </Button>
-        </div>
-      ),
-    },
-  ];
+  if (orders) {
+    const orderColumns = [
+      {
+        field: "createdAt",
+        headerName: "Date",
+        width: 140,
+        renderCell: (params) => convertToNormalDate(params.value),
+      },
+      {
+        field: "customer",
+        headerName: "Customer Name",
+        width: 250,
+        renderCell: (params) =>
+          `${params.value.firstName} ${params.value.lastName}`,
+      },
+      {
+        field: "finalPrice",
+        headerName: "Price",
+        width: 200,
+        renderCell: (params) => `$ ${params.value}`,
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 200,
+        renderCell: (params) => convertStatusToIcon(params.value),
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        width: 150,
+        renderCell: () => (
+          <div className={classes.btns}>
+            <Button variant="text" color="primary">
+              <Edit fontSize="small" />
+            </Button>
+            <Button variant="text" color="secondary">
+              <Delete fontSize="small" />
+            </Button>
+          </div>
+        ),
+      },
+    ];
 
-  const columns = orders
-    ? orderColumns
-    : products
-    ? productColumns
-    : customers
-    ? customersColumns
-    : [];
+    return { columns: orderColumns, rows };
+  }
 
-  return { columns, rows };
+  if (customers) {
+    const customersColumns = [
+      {
+        field: "spent",
+        headerName: "Spent",
+        width: 150,
+        renderCell: (params) => `$${params.value}`,
+      },
+      {
+        field: "name",
+        headerName: "Name",
+        width: 200,
+        renderCell: (params) =>
+          `${params.row.firstName} ${params.row.lastName}`,
+      },
+      {
+        field: "lastOrder",
+        headerName: "Last Order",
+        width: 180,
+        renderCell: (params) => convertToNormalDate(params.value),
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        width: 240,
+      },
+      {
+        field: "phone",
+        headerName: "Phone",
+        width: 160,
+      },
+      {
+        field: "country",
+        headerName: "Country",
+        width: 150,
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        width: 115,
+        renderCell: () => (
+          <div className={classes.btns}>
+            <Button variant="text" color="primary">
+              <Edit fontSize="small" />
+            </Button>
+            <Button variant="text" color="secondary">
+              <Delete fontSize="small" />
+            </Button>
+          </div>
+        ),
+      },
+    ];
+    return { columns: customersColumns, rows };
+  }
+
+  return { columns: [], rows: [] };
 };
 
 export const useLogicGrid = (collection) => {
@@ -209,7 +251,7 @@ export const useLogicGrid = (collection) => {
   const [disableDeleteBtn, setDisableDeleteBtn] = useState();
 
   useEffect(() => {
-    if (collection.selectionModel.length > 1) {
+    if (collection.selectionModel.length > 0) {
       return setDisableDeleteBtn(false);
     } else {
       return setDisableDeleteBtn(true);

@@ -7,10 +7,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Delete, SelectAll } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataGrid from "../compnoants/DataGrid";
+import Loading from "../compnoants/UI/Loading";
 import Paper from "../compnoants/UI/Paper";
-import OrdersData from "../data/OrdersData";
+import { AuthContext } from "../context/auth-context";
+import { useHttpClint } from "../hooks/send-request";
 import { useLogicGrid } from "../hooks/useGrid";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,24 +31,31 @@ const useStyles = makeStyles((theme) => ({
 
 const Orders = () => {
   const classes = useStyles();
-  const [orders, setOrders] = useState({ selectionModel: [] });
+  const { userId } = useContext(AuthContext);
+  const [selectedOrders, setSelectedOrders] = useState({ selectionModel: [] });
+  const { error, isLoading, resData, sendReuest } = useHttpClint();
+  const [showSelect, handleShowSelection, disableDeleteBtn, handleMultiDelete] =
+    useLogicGrid(selectedOrders);
 
-  const [
-    showSelect,
-    handleShowSelection,
-    disableDeleteBtn,
-    handleMultiDelete,
-  ] = useLogicGrid(orders);
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        await sendReuest("get", `/${userId}/orders`);
+      } catch (err) {}
+    };
 
-  const handleSetSelection = (selection) => setOrders(selection);
+    getOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  const handleSetSelection = (selection) => setSelectedOrders(selection);
 
   return (
     <Paper>
       <Grid container>
         <Grid item>
           <Typography variant="h6" className={classes.title}>
-            All Products
+            All Orders
           </Typography>
         </Grid>
         <Grid item xs></Grid>
@@ -74,14 +83,18 @@ const Orders = () => {
           </ButtonGroup>
         </Grid>
         <Grid item xs={12} className={classes.dataGridContainer}>
-          <DataGrid
-            select={showSelect}
-            orders
-            data={OrdersData}
-            onSelectionModelChange={(selection) =>
-              handleSetSelection(selection)
-            }
-          />
+          {isLoading && <Loading />}
+          {resData && (
+            <DataGrid
+              select={showSelect}
+              orders
+              data={resData.data}
+              onSelectionModelChange={(selection) =>
+                handleSetSelection(selection)
+              }
+            />
+          )}
+          {error && <Typography color="error">{error}</Typography>}
         </Grid>
       </Grid>
     </Paper>

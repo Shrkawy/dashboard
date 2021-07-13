@@ -1,20 +1,26 @@
-import React from "react";
+import { lazy, Suspense } from "react";
 import { makeStyles } from "@material-ui/core";
 import ThemeProvider from "./compnoants/ThemeProvider";
-import FixedLayout from "./compnoants/Layout/FixedLayout";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Orders from "./pages/Orders";
-import Products from "./pages/Products";
-import Customers from "./pages/Customers";
-import Messages from "./pages/Messages";
-import Settings from "./pages/Settings";
-import AddProduct from "./pages/AddProduct";
+import Loading from "./compnoants/UI/Loading";
+import { AuthContext } from "./context/auth-context";
+import { useAuth } from "./hooks/auth-hook";
+
+const FixedLayout = lazy(() => import("./compnoants/Layout/FixedLayout"));
+// routes
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Orders = lazy(() => import("./pages/Orders"));
+const Products = lazy(() => import("./pages/Products"));
+const Customers = lazy(() => import("./pages/Customers"));
+const Messages = lazy(() => import("./pages/Messages"));
+const Settings = lazy(() => import("./pages/Settings"));
+const AddProduct = lazy(() => import("./pages/AddProduct"));
+const Authentication = lazy(() => import("./pages/Authentication"));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,44 +31,87 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     marginTop: theme.spacing(10),
   },
+  spinner: {
+    width: "100vw",
+    height: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 function App() {
   const classes = useStyles();
+  const { authData, login, logout } = useAuth();
+
+  const authProviderValue = {
+    isLoggedIn: !!authData?.token,
+    token: authData?.token,
+    userId: authData?.userId,
+    username: authData?.username,
+    store: authData?.store,
+    login: login,
+    logout: logout,
+  };
+
+  let routes;
+  if (authData?.token) {
+    routes = (
+      <Switch>
+        <Route path="/orders">
+          <Orders />
+        </Route>
+        <Route path="/products/add-product">
+          <AddProduct />
+        </Route>
+        <Route path="/products">
+          <Products />
+        </Route>
+        <Route path="/customers">
+          <Customers />
+        </Route>
+        <Route path="/messages">
+          <Messages />
+        </Route>
+        <Route path="/settings">
+          <Settings />
+        </Route>
+        <Route path="/" exact>
+          <Dashboard />
+        </Route>
+        <Redirect to="/" />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/">
+          <Authentication />
+        </Route>
+      </Switch>
+    );
+  }
 
   return (
     <ThemeProvider>
-      <Router>
-        <div className={classes.root}>
-          <FixedLayout />
-          <main className={classes.content}>
-            <Switch>
-              <Route path="/orders">
-                <Orders />
-              </Route>
-              <Route path="/products/add-product">
-                <AddProduct />
-              </Route>
-              <Route path="/products">
-                <Products />
-              </Route>
-              <Route path="/customers">
-                <Customers />
-              </Route>
-              <Route path="/messages">
-                <Messages />
-              </Route>
-              <Route path="/settings">
-                <Settings />
-              </Route>
-              <Route path="/" exact>
-                <Dashboard />
-              </Route>
-              <Redirect to="/" />
-            </Switch>
-          </main>
-        </div>
-      </Router>
+      <AuthContext.Provider value={authProviderValue}>
+        <Router>
+          <div className={classes.root}>
+            <Suspense
+              fallback={
+                <div className={classes.spinner}>
+                  <Loading />
+                </div>
+              }
+            >
+              {authData?.token && <FixedLayout />}
+              <main className={classes.content}>
+                <Suspense fallback={<Loading />}>{routes}</Suspense>
+              </main>
+            </Suspense>
+          </div>
+        </Router>
+      </AuthContext.Provider>
     </ThemeProvider>
   );
 }

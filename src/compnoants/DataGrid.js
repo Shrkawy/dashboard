@@ -98,7 +98,6 @@ const DataGrid = (props) => {
 
   return (
     <MuiDataGrid
-      density="compact"
       className={classes.root}
       rows={rows}
       columns={columns}

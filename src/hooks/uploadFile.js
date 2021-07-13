@@ -1,9 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const SERVER_URL = "http://localhost:5000";
 const CLOUDINARY_URL = " https://api.cloudinary.com/v1_1/sharkawy/image/upload";
-const CLOUDINARY_PRESET = "ua2flimw";
 
 const getUploadSpeed = (loaded, start) => {
   const currTime = new Date().getTime();
@@ -18,7 +16,7 @@ const getUploadSpeed = (loaded, start) => {
 
 const startTime = new Date().getTime();
 
-export default function useAxios(data) {
+export default function useUploadFile(data) {
   const [percentage, setPercentage] = useState(0);
   const [speed, setSpeed] = useState("");
   const options = {

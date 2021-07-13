@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Avatar,
   Grid,
@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { AuthContext } from "../context/auth-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfileDropDown = () => {
   const classes = useStyles();
+  const { store, username } = useContext(AuthContext);
+  console.log(username);
+
   return (
     <Paper className={classes.root} elevation={0}>
       <Grid container alignItems="center" alignContent="space-between">
@@ -38,7 +42,7 @@ const ProfileDropDown = () => {
         </Grid>
         <Grid item xs className={classes.nameDescription}>
           <Typography variant="h6" display="block" className={classes.fontBig}>
-            Sharkawy
+            {username}
           </Typography>
           <Typography
             variant="subtitle2"
@@ -46,7 +50,7 @@ const ProfileDropDown = () => {
             color="textSecondary"
             className={classes.fontSmall}
           >
-            Full Stack Developer
+            {store}
           </Typography>
         </Grid>
         <Grid item>

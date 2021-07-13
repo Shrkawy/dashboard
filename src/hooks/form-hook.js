@@ -5,25 +5,27 @@ import { yupResolver } from "@hookform/resolvers/yup";
 export const useForm = (initValues, schema) => {
   const [images, setImages] = useState([]);
   const [imagesArray, setImagesArray] = useState([]);
-  const [description, setDescription] = useState();
+  const [description, setDescription] = useState({});
   const [tags, setTags] = useState([]);
 
   const {
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
     register,
     handleSubmit,
     control,
     reset,
     setValue,
     clearErrors,
-    watch,
     setError,
-  } = useFormHook({ initValues, resolver: yupResolver(schema) });
+    getValues,
+  } = useFormHook({ defaultValues: initValues, resolver: yupResolver(schema) });
 
   useEffect(() => {
-    const modImagesArray = Array.from(imagesArray, ({ url }) => url);
-    setValue("images", modImagesArray);
-    console.log(imagesArray);
+    reset(initValues);
+  }, [reset, initValues]);
+
+  useEffect(() => {
+    setValue("images", imagesArray);
     if (imagesArray.length !== 0) clearErrors("images");
   }, [imagesArray, setValue, clearErrors]);
 
@@ -37,8 +39,7 @@ export const useForm = (initValues, schema) => {
   }, [description, setValue, clearErrors, setError]);
 
   useEffect(() => {
-    const modTagsArray = Array.from(tags, ({ label }) => label);
-    setValue("tags", modTagsArray);
+    setValue("tags", tags);
     if (tags.length !== 0) clearErrors("tags");
   }, [tags, setValue, clearErrors]);
 
@@ -68,7 +69,6 @@ export const useForm = (initValues, schema) => {
     control,
     setImagesArray,
     clearErrors,
-    watch,
     setDescription,
     tags,
     setTags,
@@ -77,5 +77,7 @@ export const useForm = (initValues, schema) => {
     onReset,
     onSubmit,
     description,
+    getValues,
+    isSubmitting,
   };
 };
