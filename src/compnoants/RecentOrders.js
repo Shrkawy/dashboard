@@ -48,7 +48,7 @@ const convertStatusToIcon = (status) => {
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    overflow: "hidden",
+    overflow: "scroll",
   },
   tableRow: {
     backgroundColor: theme.palette.primary.main,
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ShowOnlyTable = (props) => {
+const RecentOrders = (props) => {
   const classes = useStyles();
 
   return (
@@ -71,18 +71,14 @@ const ShowOnlyTable = (props) => {
             </Grid>
             <Grid item xs></Grid>
             <Grid item>
-              <Button
-                component={Link}
-                to={props.href}
-                variant="text"
-              >
+              <Button component={Link} to={props.href} variant="text">
                 See All
               </Button>
             </Grid>
           </>
         )}
         <Grid item xs={12}>
-          <Table>
+          <Table className={classes.table}>
             <TableHead>
               <TableRow className={classes.tableRow}>
                 <TableCell>#Order No.</TableCell>
@@ -110,4 +106,4 @@ const ShowOnlyTable = (props) => {
   );
 };
 
-export default ShowOnlyTable;
+export default RecentOrders;

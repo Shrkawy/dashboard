@@ -8,18 +8,18 @@ import {
 } from "@material-ui/core";
 import { useContext, useState } from "react";
 import Loading from "../compnoants/UI/Loading";
-import { AuthContext } from "../context/auth-context";
+import { AuthContext } from "../context";
 import { useHttpClint } from "../hooks/send-request";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   form: {
-    maxWidth: theme.spacing(50),
+    maxWidth: theme.spacing(60),
     padding: theme.spacing(5),
+  },
+  center: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
@@ -52,17 +52,17 @@ const Authentication = (props) => {
   };
 
   return (
-    <main className={classes.root}>
+    <main className={classes.center}>
       {!isLoading && (
         <Paper
           component="form"
-          elevation={2}
+          elevation={0}
           className={classes.form}
           onSubmit={handleSubmit}
         >
           <Grid container spacing={5} alignItems="center" justify="center">
             <Grid item>
-              <Typography variant="h4" color="primary">
+              <Typography variant="h3" color="primary">
                 Login
               </Typography>
             </Grid>
@@ -93,12 +93,17 @@ const Authentication = (props) => {
                 </Typography>
               </Grid>
             )}
-            <Grid item>
-              <Button variant="contained" color="primary" type="submit">
+            <Grid item xs={12} className={classes.center}>
+              <Button
+                size="large"
+                variant="outlined"
+                color="primary"
+                type="submit"
+              >
                 login
               </Button>
             </Grid>
-            <Grid item>
+            <Grid item xs={12} className={classes.center}>
               <Typography variant="caption">
                 don't have account? signup
               </Typography>

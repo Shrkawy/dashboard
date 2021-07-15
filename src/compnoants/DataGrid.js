@@ -1,11 +1,24 @@
-import React from "react";
+import { useContext } from "react";
 import { DataGrid as MuiDataGrid, GridToolbar } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core";
-import { useGrid } from "../hooks/useGrid";
+import { useGetRowsAndColums } from "../hooks/get-columns";
+import { GridContext } from "../context";
 
 function customCheckbox(theme) {
   return {
     "& .MuiCheckbox-root svg": {
+      "&::-webkit-scrollbar": {
+        width: "0.4em",
+        borderRadius: theme.shape.borderRadius,
+      },
+      "&::-webkit-scrollbar-track": {
+        boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+        webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: "rgba(0,0,0,.1)",
+        outline: "1px solid slategrey",
+      },
       width: 16,
       height: 16,
       backgroundColor: "transparent",
@@ -50,7 +63,12 @@ function customCheckbox(theme) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    maxWidth: "80vw",
+    minHeight: "67vh",
     border: 0,
+    "& .MuiDataGrid-cell:focus": {
+      outline: "none",
+    },
     color:
       theme.palette.type === "light"
         ? "rgba(0,0,0,.85)"
@@ -87,29 +105,54 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiDataGrid-columnsContainer .MuiIconButton-label": {
       color: "#fff",
     },
+    "& .MuiDataGrid-row": {
+      cursor: "pointer",
+    },
     ...customCheckbox(theme),
   },
 }));
 
-const DataGrid = (props) => {
+export default function DataGrid(props) {
   const classes = useStyles();
-  const { orders, products, customers, data, select } = props;
-  const { columns, rows } = useGrid(orders, products, customers, data);
+  const { gridState, dispatch } = useContext(GridContext);
+
+  const { orders, products, customers, rows } = props;
+
+  const columns = useGetRowsAndColums(orders, products, customers);
+
+  const handleRowClick = (params) => {
+    const { id } = params;
+    const selectRow = params.api.selectRow;
+    const isSelected = Boolean(params.api.state.selection[id]);
+
+    // if in select mode -> select row.
+    if (gridState.showSelect) {
+      if (isSelected) {
+        return selectRow(id, false);
+      }
+      return selectRow(id, true);
+    }
+
+    // if not in select mode -> open details
+    alert(params.id);
+  };
 
   return (
     <MuiDataGrid
       className={classes.root}
       rows={rows}
       columns={columns}
-      checkboxSelection={select ? true : false}
       autoPageSize
+      checkboxSelection={gridState.showSelect}
       disableSelectionOnClick
+      onRowClick={handleRowClick}
+      onSelectionModelChange={(selection) =>
+        dispatch({ type: "selection", payload: selection })
+      }
       components={{
         Toolbar: GridToolbar,
       }}
       {...props}
     />
   );
-};
-
-export default DataGrid;
+}

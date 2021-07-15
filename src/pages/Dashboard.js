@@ -1,4 +1,3 @@
-import React from "react";
 import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
 import Charts from "../compnoants/charts/Charts";
 import SummaryChart from "../compnoants/SummaryChart";
@@ -6,8 +5,8 @@ import List from "../compnoants/UI/List";
 import ChartsData from "../data/ChartsData";
 import ProductsData from "../data/ProductsData";
 import Paper from "../compnoants/UI/Paper";
-import ShowOnlyTable from "../compnoants/ShowOnlyTable";
-import OrdersData from "../data/OrdersData";
+// import ShowOnlyTable from "../compnoants/RecentOrders";
+// import OrdersData from "../data/OrdersData";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +37,7 @@ const Dashboard = () => {
         <SummaryChart
           data={ChartsData.TodayOrders}
           title="Today Order"
-          price="1436"
+          price="129"
           lineColor={theme.palette.yellow.main}
           fillColor={theme.palette.yellow.light}
         />
@@ -47,7 +46,7 @@ const Dashboard = () => {
         <SummaryChart
           data={ChartsData.TotalProducts}
           title="Total Products"
-          price="25,321"
+          price="72"
           lineColor={theme.palette.pink.main}
           fillColor={theme.palette.pink.light}
         />
@@ -78,9 +77,9 @@ const Dashboard = () => {
           <Charts.DoughnutChart data={ChartsData.productStatus} />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={12} lg={8}>
+      {/* <Grid item xs={12} md={12} lg={8}>
         <ShowOnlyTable href="/orders" rows={5} title="Recent Orders" data={OrdersData} />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

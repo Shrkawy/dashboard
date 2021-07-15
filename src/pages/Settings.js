@@ -1,5 +1,5 @@
-import { Backdrop, Button, Fade, makeStyles, Modal } from "@material-ui/core";
 import { useState } from "react";
+import { Backdrop, Button, Fade, makeStyles, Modal } from "@material-ui/core";
 import AddProduct from "./AddProduct";
 
 const existedValues = {

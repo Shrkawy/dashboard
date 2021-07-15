@@ -9,3 +9,8 @@ export const AuthContext = createContext({
   login: () => {},
   logout: () => {},
 });
+
+export const GridContext = createContext({
+  gridState: null,
+  dispatch: null,
+});

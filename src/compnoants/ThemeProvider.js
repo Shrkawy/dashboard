@@ -52,11 +52,11 @@ const theme = createMuiTheme({
   },
 });
 
-const ThemeProvider = (props) => {
+const ThemeProvider = ({ children }) => {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      {props.children}
+      {children}
     </MuiThemeProvider>
   );
 };

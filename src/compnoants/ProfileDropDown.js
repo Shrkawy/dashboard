@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { AuthContext } from "../context/auth-context";
+import { AuthContext } from "../context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 const ProfileDropDown = () => {
   const classes = useStyles();
   const { store, username } = useContext(AuthContext);
-  console.log(username);
 
   return (
     <Paper className={classes.root} elevation={0}>

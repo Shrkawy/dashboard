@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { Avatar, Button, makeStyles, Typography } from "@material-ui/core";
 import { Delete, Edit } from "@material-ui/icons";
 import Status from "../compnoants/UI/Status";
+import { useGridActionButtons } from "./grid-hook2";
 
 const convertToNormalDate = (date) => {
   const newDate = new Date(date);
@@ -62,16 +62,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleCellDelete(params) {
-  console.log(params);
-}
+// function handleCellDelete(params) {
+//   console.log(params);
+// }
 
-function handleCellEdit(params) {
-  console.log(params);
-}
+// function handleCellEdit(params) {
+//   console.log(params);
+// }
 
-export const useGrid = (orders, products, customers, rows) => {
+export const useGetRowsAndColums = (orders, products, customers) => {
   const classes = useStyles();
+
+  const { handleCellDelete, handleCellEdit } = useGridActionButtons("products");
+
+  let columns = [];
   if (products) {
     const productColumns = [
       {
@@ -129,7 +133,7 @@ export const useGrid = (orders, products, customers, rows) => {
             <Button
               variant="text"
               color="secondary"
-              onClick={() => handleCellDelete(params)}
+              onClick={() => handleCellDelete(params.id)}
             >
               <Delete fontSize="small" />
             </Button>
@@ -138,7 +142,7 @@ export const useGrid = (orders, products, customers, rows) => {
       },
     ];
 
-    return { columns: productColumns, rows };
+    return (columns = productColumns);
   }
 
   if (orders) {
@@ -185,7 +189,7 @@ export const useGrid = (orders, products, customers, rows) => {
       },
     ];
 
-    return { columns: orderColumns, rows };
+    return (columns = orderColumns);
   }
 
   if (customers) {
@@ -240,29 +244,8 @@ export const useGrid = (orders, products, customers, rows) => {
         ),
       },
     ];
-    return { columns: customersColumns, rows };
+    return (columns = customersColumns);
   }
 
-  return { columns: [], rows: [] };
-};
-
-export const useLogicGrid = (collection) => {
-  const [showSelect, setShowSelect] = useState(false);
-  const [disableDeleteBtn, setDisableDeleteBtn] = useState();
-
-  useEffect(() => {
-    if (collection.selectionModel.length > 0) {
-      return setDisableDeleteBtn(false);
-    } else {
-      return setDisableDeleteBtn(true);
-    }
-  }, [collection.selectionModel.length]);
-
-  const handleShowSelection = () => setShowSelect(!showSelect);
-
-  const handleMultiDelete = () => {
-    console.log(`Delete this ${collection.selectionModel}`);
-  };
-
-  return [showSelect, handleShowSelection, disableDeleteBtn, handleMultiDelete];
+  return columns;
 };

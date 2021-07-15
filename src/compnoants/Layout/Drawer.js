@@ -18,7 +18,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MessageIcon from "@material-ui/icons/Message";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppTwoToneIcon from "@material-ui/icons/ExitToAppTwoTone";
-import { AuthContext } from "../../context/auth-context";
+import { AuthContext } from "../../context";
 
 const drawerWidth = 240;
 
@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  logoContainer: {
+    textDecoration: "none",
+  },
   logo: {
     display: "flex",
     alignItems: "center",
@@ -52,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5rem",
     "& span": {
       color: theme.palette.green.main,
-      marginLeft: "5px",
+      marginLeft: "0.4rem",
     },
   },
   logoutBtn: {
@@ -76,17 +79,18 @@ const Drawer = (props) => {
 
   const drawer = (
     <div>
-      <div>
+      <NavLink to="/" className={classes.logoContainer}>
         <h3 className={classes.logo}>
           Shark<span>Board</span>
         </h3>
-      </div>
+      </NavLink>
       <List>
         {listItems.map((item) =>
           item.exact ? (
             <ListItem
               button
               component={NavLink}
+              onClick={() => props.setMobileOpen(false)}
               to={item.to}
               exact
               key={item.title}
@@ -97,6 +101,7 @@ const Drawer = (props) => {
             </ListItem>
           ) : (
             <ListItem
+              onClick={() => props.setMobileOpen(false)}
               component={NavLink}
               button
               to={item.to}
@@ -113,6 +118,7 @@ const Drawer = (props) => {
       <List>
         {["Settings"].map((text) => (
           <ListItem
+            onClick={() => props.setMobileOpen(false)}
             button
             to="/settings"
             key={text}

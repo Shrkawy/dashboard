@@ -1,14 +1,14 @@
 import { lazy, Suspense } from "react";
 import { makeStyles } from "@material-ui/core";
-import ThemeProvider from "./compnoants/ThemeProvider";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
+import ThemeProvider from "./compnoants/ThemeProvider";
 import Loading from "./compnoants/UI/Loading";
-import { AuthContext } from "./context/auth-context";
+import { AuthContext } from "./context";
 import { useAuth } from "./hooks/auth-hook";
 
 const FixedLayout = lazy(() => import("./compnoants/Layout/FixedLayout"));
@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
     marginTop: theme.spacing(10),
+    minHeight: "50vh",
   },
   spinner: {
     width: "100vw",
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function App() {
+export default function App() {
   const classes = useStyles();
   const { authData, login, logout } = useAuth();
 
@@ -115,5 +116,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;
