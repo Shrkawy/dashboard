@@ -1,39 +1,8 @@
 import { Avatar, Button, makeStyles, Typography } from "@material-ui/core";
 import { Delete, Edit } from "@material-ui/icons";
-import Status from "../compnoants/UI/Status";
-import { useGridActionButtons } from "./grid-hook2";
-
-const convertToNormalDate = (date) => {
-  const newDate = new Date(date);
-  const year = newDate.getFullYear();
-  let month = newDate.getMonth() + 1;
-  let dt = newDate.getDate();
-
-  if (dt < 10) {
-    dt = "0" + dt;
-  }
-  if (month < 10) {
-    month = "0" + month;
-  }
-  return `${dt}/${month}/${year}`;
-};
-
-const convertStatusToIcon = (status) => {
-  let statusIcon;
-
-  switch (status) {
-    case "Canceled":
-      return (statusIcon = <Status label="Canceled" canceled />);
-    case "Pending":
-      return (statusIcon = <Status label="Pending" pending />);
-    case "Deliverd":
-      return (statusIcon = <Status label="Deliverd" deliverd />);
-    default:
-      status = <Status label="..." />;
-  }
-
-  return statusIcon;
-};
+import { useGridActionButtons } from "../hooks/grid-hook2";
+import { convertToNormalDate } from "./convert-to-normal-date";
+import { convertStatusToIcon } from "./convert-status-icon";
 
 const useStyles = makeStyles((theme) => ({
   btns: {
@@ -70,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 //   console.log(params);
 // }
 
-export const useGetRowsAndColums = (orders, products, customers) => {
+export const useGetColums = (orders, products, customers) => {
   const classes = useStyles();
 
   const { handleCellDelete, handleCellEdit } = useGridActionButtons("products");

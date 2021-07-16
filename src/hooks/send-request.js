@@ -29,7 +29,6 @@ export const useHttpClint = () => {
             },
             url: `${process.env.REACT_APP_BACKEND_URL + url}`,
             data,
-            timeout: 5000,
           });
 
           if (!res.data.success) {

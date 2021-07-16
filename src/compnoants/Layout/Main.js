@@ -1,3 +1,4 @@
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -8,9 +9,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Delete, SelectAll, AddCircleOutline } from "@material-ui/icons";
-import Paper from "../UI/Paper";
-import { useContext } from "react";
 import { GridContext } from "../../context";
+import Paper from "../UI/Paper";
+import Loading from "../UI/Loading";
 
 const useStyles = makeStyles((theme) => ({
   dataGridContainer: {
@@ -27,8 +28,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Main(props) {
   const { dispatch, gridState } = useContext(GridContext);
-  const { title, children, error, handleMultiDelete } = props;
+  const { title, children, APIUrl, handleMultiDelete } = props;
   const classes = useStyles();
+
+  useEffect(() => {
+    dispatch({ type: "gridAPIUrl", payload: APIUrl });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [APIUrl]);
+
   return (
     <Paper>
       <Grid container>
@@ -71,8 +78,11 @@ export default function Main(props) {
         </Grid>
 
         <Grid item xs={12} className={classes.dataGridContainer}>
-          {children}
-          {error && <Typography color="error">{error}</Typography>}
+          {gridState.gridIsLoading && <Loading />}
+          {gridState.rows && children}
+          {gridState.rowsError && (
+            <Typography color="error">{gridState.rowsError}</Typography>
+          )}
         </Grid>
       </Grid>
     </Paper>

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { DataGrid as MuiDataGrid, GridToolbar } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core";
-import { useGetRowsAndColums } from "../hooks/get-columns";
+import { useGetColums } from "../utils/get-columns";
 import { GridContext } from "../context";
 
 function customCheckbox(theme) {
@@ -113,12 +113,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function DataGrid(props) {
+  const { orders, products, customers } = props;
+
   const classes = useStyles();
+
   const { gridState, dispatch } = useContext(GridContext);
 
-  const { orders, products, customers, rows } = props;
-
-  const columns = useGetRowsAndColums(orders, products, customers);
+  const columns = useGetColums(orders, products, customers);
 
   const handleRowClick = (params) => {
     const { id } = params;
@@ -137,22 +138,24 @@ export default function DataGrid(props) {
     alert(params.id);
   };
 
+  const handleOnSelectionModelChange = (selection) => {
+    dispatch({ type: "selection", payload: selection });
+  };
+
   return (
     <MuiDataGrid
       className={classes.root}
-      rows={rows}
+      rows={gridState.rows}
       columns={columns}
       autoPageSize
       checkboxSelection={gridState.showSelect}
       disableSelectionOnClick
+      selectionModel={gridState.selection.selectionModel}
       onRowClick={handleRowClick}
-      onSelectionModelChange={(selection) =>
-        dispatch({ type: "selection", payload: selection })
-      }
+      onSelectionModelChange={handleOnSelectionModelChange}
       components={{
         Toolbar: GridToolbar,
       }}
-      {...props}
     />
   );
 }
