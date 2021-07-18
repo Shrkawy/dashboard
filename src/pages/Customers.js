@@ -8,7 +8,7 @@ const Customers = () => {
   const { userId } = useContext(AuthContext);
   return (
     <GridStateProvider>
-      <Main title="All Customers" APIUrl={`/${userId}/customers`}>
+      <Main title="All Customers" APIUrl={`/${userId}/customers`} customers>
         <DataGrid customers />
       </Main>
     </GridStateProvider>

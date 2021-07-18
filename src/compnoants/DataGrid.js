@@ -112,30 +112,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataGrid(props) {
-  const { orders, products, customers } = props;
-
+export default function DataGrid({ orders, products, customers }) {
   const classes = useStyles();
 
   const { gridState, dispatch } = useContext(GridContext);
+  const { selection, showSelect, rows } = gridState;
 
   const columns = useGetColums(orders, products, customers);
 
-  const handleRowClick = (params) => {
+  const handleRowClick = async (params) => {
     const { id } = params;
-    const selectRow = params.api.selectRow;
-    const isSelected = Boolean(params.api.state.selection[id]);
 
     // if in select mode -> select row.
-    if (gridState.showSelect) {
-      if (isSelected) {
-        return selectRow(id, false);
-      }
-      return selectRow(id, true);
-    }
+    if (showSelect) return;
 
     // if not in select mode -> open details
-    alert(params.id);
+    dispatch({ type: "selectedItem", payload: id });
+    dispatch({ type: "openDialog" });
   };
 
   const handleOnSelectionModelChange = (selection) => {
@@ -145,14 +138,15 @@ export default function DataGrid(props) {
   return (
     <MuiDataGrid
       className={classes.root}
-      rows={gridState.rows}
+      rows={rows}
       columns={columns}
       autoPageSize
-      checkboxSelection={gridState.showSelect}
-      disableSelectionOnClick
-      selectionModel={gridState.selection.selectionModel}
+      checkboxSelection={showSelect}
+      disableSelectionOnClick={!showSelect}
+      selectionModel={selection.selectionModel}
       onRowClick={handleRowClick}
       onSelectionModelChange={handleOnSelectionModelChange}
+      scrollbarSize={1}
       components={{
         Toolbar: GridToolbar,
       }}

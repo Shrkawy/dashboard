@@ -12,10 +12,12 @@ import { Delete, SelectAll, AddCircleOutline } from "@material-ui/icons";
 import { GridContext } from "../../context";
 import Paper from "../UI/Paper";
 import Loading from "../UI/Loading";
+import { getDialogItemObject } from "../../utils/get-item-object";
+import ItemDialog from "../ItemDialog";
 
 const useStyles = makeStyles((theme) => ({
   dataGridContainer: {
-    maxHeight: "70vh",
+    maxHeight: "68vh",
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
   },
@@ -27,13 +29,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function Main(props) {
-  const { dispatch, gridState } = useContext(GridContext);
-  const { title, children, APIUrl, handleMultiDelete } = props;
   const classes = useStyles();
+  const { dispatch, gridState } = useContext(GridContext);
+  const { title, children, APIUrl, handleMultiDelete, ...other } = props;
+  const { rowsError, rows, gridIsLoading, disableDeleteBtn } = gridState;
+
+  let itemDetails;
+  if (gridState.openDialog && gridState.dialogData) {
+    itemDetails = getDialogItemObject(
+      {
+        products: other.products,
+        orders: other.orders,
+        customers: other.customers,
+      },
+      gridState.dialogData
+    );
+  }
 
   useEffect(() => {
     dispatch({ type: "gridAPIUrl", payload: APIUrl });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [APIUrl]);
 
   return (
@@ -48,7 +63,7 @@ export default function Main(props) {
         <Grid item>
           <ButtonGroup className={classes.btns} size="small">
             <Button
-              className={classes.btn}
+              disableElevation
               variant="contained"
               color="primary"
               startIcon={<SelectAll />}
@@ -57,15 +72,17 @@ export default function Main(props) {
               <Hidden smDown>Select</Hidden>
             </Button>
             <Button
+              disableElevation
               variant="outlined"
               color="secondary"
               startIcon={<Delete />}
-              disabled={gridState.disableDeleteBtn}
+              disabled={disableDeleteBtn}
               onClick={handleMultiDelete}
             >
               <Hidden smDown>DELETE</Hidden>
             </Button>
             <Button
+              disableElevation
               component={Link}
               to="/products/add-product"
               variant="contained"
@@ -78,12 +95,16 @@ export default function Main(props) {
         </Grid>
 
         <Grid item xs={12} className={classes.dataGridContainer}>
-          {gridState.gridIsLoading && <Loading />}
-          {gridState.rows && children}
-          {gridState.rowsError && (
-            <Typography color="error">{gridState.rowsError}</Typography>
-          )}
+          {gridIsLoading && <Loading />}
+          {rows.length > 0 && children}
+          {rowsError && <Typography color="error">{rowsError}</Typography>}
         </Grid>
+        {gridState.openDialog && (
+          <ItemDialog
+            item={itemDetails}
+            isLoading={gridState.dialogIsLoading}
+          />
+        )}
       </Grid>
     </Paper>
   );

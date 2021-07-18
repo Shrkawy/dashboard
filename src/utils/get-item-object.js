@@ -1,47 +1,50 @@
-export const getDialogItemObject = (orders, products, customers) => {
+export const getDialogItemObject = (item, itemData) => {
+  const { products, orders, customers } = item;
+
   if (orders) {
     return {
-      ID: null,
-      Discount: null,
-      "Original Price": null,
-      "Final Price": null,
-      Status: null,
-      "Created At": null,
-      "Last Update": null,
+      ID: itemData._id,
+      Customer: `${itemData.customer.firstName} ${itemData.customer.lastName}`,
+      Discount: itemData.discount,
+      "Original Price": itemData.originalPrice,
+      "Final Price": itemData.finalPrice,
+      Status: itemData.status,
+      "Created At": itemData.createdAt,
+      "Last Update": itemData.updatedAt,
     };
   }
 
   if (products) {
     return {
-      ID: null,
-      "Product Name": null,
-      Categoty: null,
-      "Sub Category": null,
-      Price: null,
-      OriginalPrice: null,
-      Revinue: this.Price - this.OriginalPrice,
-      Stock: null,
-      Sold: null,
-      Description: null,
-      "Created At": null,
-      "Last Update": null,
+      ID: itemData.id,
+      "Product Name": itemData.productName,
+      images: itemData.images,
+      Category: itemData.category,
+      "Sub Category": itemData.subCategory,
+      Price: itemData.price,
+      OriginalPrice: itemData.originalPrice,
+      Revinue: `${itemData.price - itemData.originalPrice}`,
+      Stock: itemData.stock,
+      Sold: itemData?.sold,
+      "Created At": itemData.createdAt,
+      "Last Update": itemData.updatedAt,
     };
   }
 
   if (customers) {
     return {
-      ID: null,
-      Email: null,
-      Phone: null,
-      "First Name": null,
-      "Last Name": null,
-      Country: null,
-      State: null,
-      "Adress 1": null,
-      "Adress 2": null,
-      "Zip Code": null,
-      "Created At": null,
-      "Last Update": null,
+      ID: itemData.id,
+      Email: itemData.email,
+      Phone: itemData.phone,
+      "First Name": itemData.firstName,
+      "Last Name": itemData.lastName,
+      Country: itemData.country,
+      State: itemData.state,
+      "Address 1": itemData.address1,
+      "Address 2": itemData.address2 ? itemData.address2 : "not found",
+      "Zip Code": itemData.zipCode,
+      "Created At": itemData.createdAt,
+      "Last Update": itemData.updatedAt,
     };
   }
 

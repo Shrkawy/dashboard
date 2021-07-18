@@ -15,7 +15,6 @@ function getToken() {
 export const useHttpClint = () => {
   const [isLoading, setIsloading] = useState(false);
   const [error, setError] = useState(null);
-  const [resData, setResData] = useState(null);
 
   const sendReuest = useCallback(
     async (method = "get", url = null, data = null) => {
@@ -37,7 +36,6 @@ export const useHttpClint = () => {
             return;
           }
 
-          setResData(res.data);
           setIsloading(false);
           return res.data;
         } catch (err) {
@@ -53,5 +51,5 @@ export const useHttpClint = () => {
     sendReuest();
   }, []);
 
-  return { isLoading, error, resData, sendReuest };
+  return { isLoading, error, sendReuest };
 };

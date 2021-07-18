@@ -9,7 +9,7 @@ const Products = () => {
 
   return (
     <GridStateProvider>
-      <Main title="All Products" APIUrl={`/${userId}/products`}>
+      <Main title="All Products" APIUrl={`/${userId}/products`} products>
         <DataGrid products />
       </Main>
     </GridStateProvider>
