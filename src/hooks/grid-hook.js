@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { useHttpClint } from "./send-request";
 
 const reducer = (state, action) => {
@@ -59,6 +59,21 @@ const reducer = (state, action) => {
         ...state,
         dialogData: action.payload,
       };
+    case "deleteItem":
+      return {
+        ...state,
+        deleteItem: action.payload,
+      };
+    case "snackbar":
+      return {
+        ...state,
+        snackbar: {
+          ...state.snackbar,
+          open: action.payload.open,
+          message: action.payload.message,
+          type: action.payload.type,
+        },
+      };
     default:
       return state;
   }
@@ -76,36 +91,86 @@ const initState = {
   openDialog: false,
   dialogIsLoading: false,
   dialogData: null,
+  deleteItem: false,
+  snackbar: {
+    open: false,
+    message: "",
+    type: "success",
+  },
 };
 
 export function useGridContext() {
   const [gridState, dispatch] = useReducer(reducer, initState);
   const { error, sendReuest } = useHttpClint();
 
-  const { gridAPIUrl, showSelect, selection, selectedItem, openDialog } =
-    gridState;
+  const {
+    gridAPIUrl,
+    showSelect,
+    selection,
+    selectedItem,
+    openDialog,
+    deleteItem,
+    snackbar,
+  } = gridState;
 
-  // get grid data when you enter the grid page
-  useEffect(() => {
+  // get row items from DB
+  const getItemsFromDB = useCallback(async () => {
     dispatch({ type: "gridIsLoading", payload: true });
-    if (gridState.rows.length === 0) {
-      const getItemsFromDB = async () => {
-        try {
-          const res = await sendReuest("get", gridAPIUrl);
-          dispatch({ type: "rows", payload: res.data });
-          dispatch({ type: "gridIsLoading", payload: false });
-        } catch (err) {}
-      };
-
-      getItemsFromDB();
-    } else return;
+    try {
+      const res = await sendReuest("get", gridAPIUrl);
+      console.log(res);
+      if (error) {
+        dispatch({ type: "rowsError", payload: error });
+        dispatch({ type: "gridIsLoading", payload: false });
+        return;
+      }
+      dispatch({ type: "rows", payload: res.data });
+      dispatch({ type: "gridIsLoading", payload: false });
+    } catch (err) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gridAPIUrl]);
 
-  // show error if fetch faild
+  // get single item from DB
+  const getItemFromDB = useCallback(async () => {
+    dispatch({ type: "dialogIsLoading", payload: true });
+    try {
+      const res = await sendReuest("get", `${gridAPIUrl}/${selectedItem}`);
+      dispatch({ type: "dialogData", payload: res.data });
+      dispatch({ type: "dialogIsLoading", payload: false });
+      if (error) {
+        console.log(error);
+        return;
+      }
+    } catch (err) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItem, openDialog]);
+
+  // delete item from DB
+  const deleteItemFromDB = useCallback(async () => {
+    dispatch({ type: "dialogIsLoading", payload: true });
+    await sendReuest("delete", `${gridAPIUrl}/${selectedItem}`);
+    if (error) {
+      dispatch({ type: "dialogIsLoading", payload: true });
+      dispatch({ type: "deleteItem", payload: false });
+      return;
+    }
+    dispatch({ type: "dialogIsLoading", payload: false });
+    dispatch({ type: "openDialog" });
+    dispatch({ type: "deleteItem", payload: false });
+    dispatch({
+      type: "snackbar",
+      payload: { open: true, message: "deleted successfully", type: "success" },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteItem]);
+
+  // get grid data when you enter the grid page
   useEffect(() => {
-    dispatch({ type: "rowsError", payload: error });
-  }, [error]);
+    if (gridState.rows.length === 0) {
+      getItemsFromDB();
+    } else return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gridAPIUrl, gridState.rows]);
 
   // handle select items
   useEffect(() => {
@@ -125,22 +190,34 @@ export function useGridContext() {
   // handle open dialog
   useEffect(() => {
     if (selectedItem && openDialog) {
-      const getItemsFromDB = async () => {
-        dispatch({ type: "dialogIsLoading", payload: true });
-        try {
-          const res = await sendReuest("get", `${gridAPIUrl}/${selectedItem}`);
-          dispatch({ type: "dialogData", payload: res.data });
-          dispatch({ type: "dialogIsLoading", payload: false });
-          if (error) {
-            console.log(error);
-            return;
-          }
-        } catch (err) {}
-      };
-      getItemsFromDB();
+      getItemFromDB();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem, openDialog]);
+
+  // handel delete item
+  useEffect(() => {
+    if (deleteItem) {
+      deleteItemFromDB();
+    } else return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteItem]);
+
+  // handle edit item
+
+  // handle delete multible items
+
+  // handle close snackbar
+  useEffect(() => {
+    if (snackbar.open) {
+      setTimeout(() => {
+        dispatch({
+          type: "snackbar",
+          payload: { open: false },
+        });
+      }, 4000);
+    }
+  }, [snackbar.open]);
 
   return { gridState, dispatch };
 }

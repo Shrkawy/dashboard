@@ -1,8 +1,9 @@
-import { forwardRef, lazy, useContext } from "react";
+import { forwardRef, lazy, useContext, useEffect, useState } from "react";
 import { Button, Dialog, Grid, makeStyles, Slide } from "@material-ui/core";
 import { ArrowForward, DeleteForeverOutlined, Edit } from "@material-ui/icons";
 import Loading from "./UI/Loading";
 import { GridContext } from "../context";
+import ConfirmDialog from "./UI/ConfirmDialog";
 const ImageSlider = lazy(() => import("./UI/ImageSlider"));
 
 const useStyles = makeStyles((theme) => ({
@@ -48,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: theme.typography.fontWeightLight,
     },
     "& > p:first-child": {
-      color: theme.palette.text.hint,
-      fontSize: theme.typography.caption.fontSize,
+      color: theme.palette.text.secondary,
+      fontSize: "0.75rem",
     },
   },
 }));
@@ -64,7 +65,9 @@ const Transition = forwardRef((props, ref) => {
 
 export default function ItemDialog({ item, isLoading }) {
   const classes = useStyles();
-  const { dispatch } = useContext(GridContext);
+  const { gridState, dispatch } = useContext(GridContext);
+  const [openWorning, setOpenWorning] = useState(false);
+  const [confirmWorning, setConfirmWornong] = useState(false);
 
   const handleHideClick = () => {
     dispatch({ type: "openDialog" });
@@ -72,11 +75,18 @@ export default function ItemDialog({ item, isLoading }) {
     dispatch({ type: "dialogData", payload: null });
   };
 
+  useEffect(() => {
+    if (confirmWorning) {
+      dispatch({ type: "deleteItem", payload: true });
+      setConfirmWornong(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [confirmWorning]);
+
   return (
     <Dialog
-      open
+      open={gridState.openDialog}
       TransitionComponent={Transition}
-      onBackdropClick={handleHideClick}
       keepMounted
       hideBackdrop
       className={classes.dialogContainer}
@@ -121,6 +131,7 @@ export default function ItemDialog({ item, isLoading }) {
                 size="medium"
                 variant="contained"
                 disableElevation
+                onClick={() => setOpenWorning(true)}
               >
                 Delete
               </Button>
@@ -130,7 +141,7 @@ export default function ItemDialog({ item, isLoading }) {
             </Grid>
             <Grid item xs={12}>
               {Object.entries(item).map(([key, value]) => {
-                if (key === "images") {
+                if (key === ("images" || "description")) {
                   return null;
                 }
                 return (
@@ -144,6 +155,11 @@ export default function ItemDialog({ item, isLoading }) {
           </>
         )}
       </Grid>
+      <ConfirmDialog
+        open={openWorning}
+        setOpen={setOpenWorning}
+        setConfirm={setConfirmWornong}
+      />
     </Dialog>
   );
 }

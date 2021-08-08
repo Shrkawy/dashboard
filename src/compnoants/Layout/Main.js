@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import {
   Button,
   ButtonGroup,
@@ -14,6 +15,7 @@ import Paper from "../UI/Paper";
 import Loading from "../UI/Loading";
 import { getDialogItemObject } from "../../utils/get-item-object";
 import ItemDialog from "../ItemDialog";
+import Snackbar from "../UI/Snackbar";
 
 const useStyles = makeStyles((theme) => ({
   dataGridContainer: {
@@ -28,19 +30,20 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
   },
 }));
-export default function Main(props) {
+
+function Main({ title, children, APIUrl, products, orders, customers }) {
   const classes = useStyles();
   const { dispatch, gridState } = useContext(GridContext);
-  const { title, children, APIUrl, handleMultiDelete, ...other } = props;
-  const { rowsError, rows, gridIsLoading, disableDeleteBtn } = gridState;
+  const { rowsError, rows, gridIsLoading, disableDeleteBtn, snackbar } =
+    gridState;
 
   let itemDetails;
   if (gridState.openDialog && gridState.dialogData) {
     itemDetails = getDialogItemObject(
       {
-        products: other.products,
-        orders: other.orders,
-        customers: other.customers,
+        products,
+        orders,
+        customers,
       },
       gridState.dialogData
     );
@@ -77,7 +80,7 @@ export default function Main(props) {
               color="secondary"
               startIcon={<Delete />}
               disabled={disableDeleteBtn}
-              onClick={handleMultiDelete}
+              onClick={() => console.log("multi delete")}
             >
               <Hidden smDown>DELETE</Hidden>
             </Button>
@@ -99,13 +102,25 @@ export default function Main(props) {
           {rows.length > 0 && children}
           {rowsError && <Typography color="error">{rowsError}</Typography>}
         </Grid>
-        {gridState.openDialog && (
-          <ItemDialog
-            item={itemDetails}
-            isLoading={gridState.dialogIsLoading}
-          />
-        )}
+
+        <ItemDialog item={itemDetails} isLoading={gridState.dialogIsLoading} />
+        <Snackbar
+          open={snackbar.open}
+          message={snackbar.message}
+          type={snackbar.type}
+        />
       </Grid>
     </Paper>
   );
 }
+
+Main.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node,
+  APIUrl: PropTypes.string.isRequired,
+  products: PropTypes.bool,
+  orders: PropTypes.bool,
+  customers: PropTypes.bool,
+};
+
+export default Main;

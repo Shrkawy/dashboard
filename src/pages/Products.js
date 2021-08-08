@@ -6,7 +6,6 @@ import GridStateProvider from "../context/GridStateProvider";
 
 const Products = () => {
   const { userId } = useContext(AuthContext);
-
   return (
     <GridStateProvider>
       <Main title="All Products" APIUrl={`/${userId}/products`} products>

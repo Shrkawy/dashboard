@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import PropTypes from "prop-types";
 import { DataGrid as MuiDataGrid, GridToolbar } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core";
 import { useGetColums } from "../utils/get-columns";
@@ -112,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataGrid({ orders, products, customers }) {
+function DataGrid({ orders, products, customers }) {
   const classes = useStyles();
 
   const { gridState, dispatch } = useContext(GridContext);
@@ -136,20 +137,30 @@ export default function DataGrid({ orders, products, customers }) {
   };
 
   return (
-    <MuiDataGrid
-      className={classes.root}
-      rows={rows}
-      columns={columns}
-      autoPageSize
-      checkboxSelection={showSelect}
-      disableSelectionOnClick={!showSelect}
-      selectionModel={selection.selectionModel}
-      onRowClick={handleRowClick}
-      onSelectionModelChange={handleOnSelectionModelChange}
-      scrollbarSize={1}
-      components={{
-        Toolbar: GridToolbar,
-      }}
-    />
+    rows.length > 0 && (
+      <MuiDataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        autoPageSize
+        checkboxSelection={showSelect}
+        disableSelectionOnClick={!showSelect}
+        selectionModel={selection.selectionModel}
+        onRowClick={handleRowClick}
+        onSelectionModelChange={handleOnSelectionModelChange}
+        scrollbarSize={1}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+      />
+    )
   );
 }
+
+DataGrid.propTypes = {
+  products: PropTypes.bool,
+  orders: PropTypes.bool,
+  customers: PropTypes.bool,
+};
+
+export default DataGrid;

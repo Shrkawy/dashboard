@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import {
   Button,
   Grid,
@@ -6,7 +7,6 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { useContext, useState } from "react";
 import Loading from "../compnoants/UI/Loading";
 import { AuthContext } from "../context";
 import { useHttpClint } from "../hooks/send-request";
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Authentication = (props) => {
+const Authentication = () => {
   const { login } = useContext(AuthContext);
   const classes = useStyles();
   const [loginFormValues, setLoginFormValues] = useState({

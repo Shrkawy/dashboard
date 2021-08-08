@@ -167,7 +167,7 @@ export const useGetColums = (orders, products, customers) => {
         field: "spent",
         headerName: "Spent",
         width: 150,
-        renderCell: (params) => `$${params.value}`,
+        renderCell: (params) => `$ ${params.value}`,
       },
       {
         field: "name",
@@ -180,7 +180,10 @@ export const useGetColums = (orders, products, customers) => {
         field: "lastOrder",
         headerName: "Last Order",
         width: 180,
-        renderCell: (params) => convertToNormalDate(params.value),
+        renderCell: (params) => {
+          if (!params.value) return "no orders";
+          return convertToNormalDate(params.value);
+        },
       },
       {
         field: "email",

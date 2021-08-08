@@ -12,7 +12,6 @@ const Orders = () => {
         title="All Orders"
         APIUrl={`/${userId}/orders`}
         orders
-        // handleMultiDelete={handleMultiDelete}
       >
         <DataGrid orders />
       </Main>
