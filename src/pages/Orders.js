@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { AuthContext } from "../context";
 import GridStateProvider from "../context/GridStateProvider";
-import Main from "../compnoants/Layout/Main";
-import DataGrid from "../compnoants/DataGrid";
+import Main from "../components/Layout/Main";
+import DataGrid from "../components/DataGrid";
 
 const Orders = () => {
   const { userId } = useContext(AuthContext);

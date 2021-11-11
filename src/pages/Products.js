@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import DataGrid from "../compnoants/DataGrid";
+import DataGrid from "../components/DataGrid";
 import { AuthContext } from "../context";
-import Main from "../compnoants/Layout/Main";
+import Main from "../components/Layout/Main";
 import GridStateProvider from "../context/GridStateProvider";
 
 const Products = () => {

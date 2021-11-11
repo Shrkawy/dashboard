@@ -1,11 +1,11 @@
 import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
-import Charts from "../compnoants/charts/Charts";
-import SummaryChart from "../compnoants/SummaryChart";
-import List from "../compnoants/UI/List";
+import Charts from "../components/charts/Charts";
+import SummaryChart from "../components/SummaryChart";
+import List from "../components/UI/List";
 import ChartsData from "../data/ChartsData";
 import ProductsData from "../data/ProductsData";
-import Paper from "../compnoants/UI/Paper";
-// import ShowOnlyTable from "../compnoants/RecentOrders";
+import Paper from "../components/UI/Paper";
+// import ShowOnlyTable from "../components/RecentOrders";
 // import OrdersData from "../data/OrdersData";
 
 const useStyles = makeStyles((theme) => ({

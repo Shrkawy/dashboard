@@ -16,7 +16,7 @@ export const useHttpClint = () => {
   const [isLoading, setIsloading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendReuest = useCallback(
+  const sendRequest = useCallback(
     async (method = "get", url = null, data = null) => {
       if (url) {
         setIsloading(true);
@@ -48,8 +48,8 @@ export const useHttpClint = () => {
   );
 
   useEffect(() => {
-    sendReuest();
+    sendRequest();
   }, []);
 
-  return { isLoading, error, sendReuest };
+  return { isLoading, error, sendRequest };
 };

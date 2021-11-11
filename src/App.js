@@ -6,12 +6,12 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import ThemeProvider from "./compnoants/ThemeProvider";
-import Loading from "./compnoants/UI/Loading";
+import ThemeProvider from "./components/ThemeProvider";
+import Loading from "./components/UI/Loading";
 import { AuthContext } from "./context";
 import { useAuth } from "./hooks/auth-hook";
 
-const FixedLayout = lazy(() => import("./compnoants/Layout/FixedLayout"));
+const FixedLayout = lazy(() => import("./components/Layout/FixedLayout"));
 // routes
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Orders = lazy(() => import("./pages/Orders"));

@@ -3,13 +3,13 @@ import { AuthContext } from "../context";
 import { useHttpClint } from "./send-request";
 
 export const useGridActionButtons = (GridDataType) => {
-  const { error, isLoading, sendReuest } = useHttpClint();
+  const { error, isLoading, sendRequest } = useHttpClint();
   const { userId } = useContext(AuthContext);
 
   const handleCellDelete = async (itemId, customerId) => {
     if (isLoading) return;
     try {
-      const res = await sendReuest(
+      const res = await sendRequest(
         "DELETE",
         `/${userId}${
           customerId ? `/${customerId}` : ""

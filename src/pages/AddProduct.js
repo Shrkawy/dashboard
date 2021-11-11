@@ -5,12 +5,12 @@ import { AttachMoney } from "@material-ui/icons";
 
 import { useForm } from "../hooks/form-hook";
 import { Categories, SubCategories } from "../data/Categories";
-import Paper from "../compnoants/UI/Paper";
-import ImagePicker from "../compnoants/form/ImagePicker";
-import Select from "../compnoants/form/Select";
-import Input from "../compnoants/form/Input";
-import Draft from "../compnoants/form/Draft";
-import Tags from "../compnoants/form/Tags";
+import Paper from "../components/UI/Paper";
+import ImagePicker from "../components/form/ImagePicker";
+import Select from "../components/form/Select";
+import Input from "../components/form/Input";
+import Draft from "../components/form/Draft";
+import Tags from "../components/form/Tags";
 import { FormProvider } from "react-hook-form";
 
 const initValues = {

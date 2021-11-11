@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import Loading from "../compnoants/UI/Loading";
+import Loading from "../components/UI/Loading";
 import { AuthContext } from "../context";
 import { useHttpClint } from "../hooks/send-request";
 
@@ -30,7 +30,7 @@ const Authentication = () => {
     username: "",
     password: "",
   });
-  const { error, isLoading, sendReuest } = useHttpClint();
+  const { error, isLoading, sendRequest } = useHttpClint();
 
   const handleFormInput = (e) => {
     const { name, value } = e.target;
@@ -43,7 +43,7 @@ const Authentication = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await sendReuest("post", "/login", loginFormValues);
+      const data = await sendRequest("post", "/login", loginFormValues);
 
       if (data) {
         login(data.id, data.token.value, data.store, data.username);

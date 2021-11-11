@@ -1,4 +1,4 @@
-import Status from "../compnoants/UI/Status";
+import Status from "../components/UI/Status";
 
 export const convertStatusToIcon = (status) => {
   let statusIcon;

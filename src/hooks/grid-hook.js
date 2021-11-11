@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { useHttpClint } from "./send-request";
 
 const reducer = (state, action) => {
@@ -101,7 +101,7 @@ const initState = {
 
 export function useGridContext() {
   const [gridState, dispatch] = useReducer(reducer, initState);
-  const { error, sendReuest } = useHttpClint();
+  const { error, sendRequest } = useHttpClint();
 
   const {
     gridAPIUrl,
@@ -117,7 +117,7 @@ export function useGridContext() {
   const getItemsFromDB = useCallback(async () => {
     dispatch({ type: "gridIsLoading", payload: true });
     try {
-      const res = await sendReuest("get", gridAPIUrl);
+      const res = await sendRequest("get", gridAPIUrl);
       console.log(res);
       if (error) {
         dispatch({ type: "rowsError", payload: error });
@@ -134,7 +134,7 @@ export function useGridContext() {
   const getItemFromDB = useCallback(async () => {
     dispatch({ type: "dialogIsLoading", payload: true });
     try {
-      const res = await sendReuest("get", `${gridAPIUrl}/${selectedItem}`);
+      const res = await sendRequest("get", `${gridAPIUrl}/${selectedItem}`);
       dispatch({ type: "dialogData", payload: res.data });
       dispatch({ type: "dialogIsLoading", payload: false });
       if (error) {
@@ -148,7 +148,7 @@ export function useGridContext() {
   // delete item from DB
   const deleteItemFromDB = useCallback(async () => {
     dispatch({ type: "dialogIsLoading", payload: true });
-    await sendReuest("delete", `${gridAPIUrl}/${selectedItem}`);
+    await sendRequest("delete", `${gridAPIUrl}/${selectedItem}`);
     if (error) {
       dispatch({ type: "dialogIsLoading", payload: true });
       dispatch({ type: "deleteItem", payload: false });
