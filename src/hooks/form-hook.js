@@ -52,7 +52,6 @@ export const useForm = (initValues, schema) => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
     reset({ keepDefaultValues: true });
     setImagesArray([]);
     setImages([]);

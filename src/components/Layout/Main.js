@@ -39,7 +39,6 @@ function Main({ title, children, APIUrl, products, orders, customers }) {
 
   let itemDetails;
 
-  console.log(gridState.dialogData);
 
   if (gridState.openDialog && gridState.dialogData) {
     itemDetails = getDialogItemObject(

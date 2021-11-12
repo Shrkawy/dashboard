@@ -21,7 +21,7 @@ const upload = async (data, options) => {
     const id = res.data.signature;
     return { id, url };
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -62,8 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProgressBar(props) {
   const classes = useStyles();
-  const { image, preview, setImagesArray, existed } =
-    props;
+  const { image, preview, setImagesArray, existed } = props;
 
   const [uploadState, setUploadState] = useState({
     id: null,

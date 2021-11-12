@@ -34,7 +34,7 @@ export default function useUploadFile(data) {
       const res = await axios.post(CLOUDINARY_URL, uploadData, options);
       return res;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

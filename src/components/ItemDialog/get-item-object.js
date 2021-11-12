@@ -1,6 +1,5 @@
 export const getDialogItemObject = (item, itemData) => {
   const { products, orders, customers } = item;
-  console.log("item", item);
 
   if (orders) {
     return {

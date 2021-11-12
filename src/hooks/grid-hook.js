@@ -123,7 +123,6 @@ export function useGridContext() {
         dispatch({ type: "gridIsLoading", payload: false });
         return;
       }
-      console.log(res);
       dispatch({ type: "rows", payload: res.data });
       dispatch({ type: "gridIsLoading", payload: false });
     } catch (err) {}
@@ -138,7 +137,7 @@ export function useGridContext() {
       dispatch({ type: "dialogData", payload: res.data });
       dispatch({ type: "dialogIsLoading", payload: false });
       if (error) {
-        console.log(error);
+        console.error(error);
         return;
       }
     } catch (err) {}

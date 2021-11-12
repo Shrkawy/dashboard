@@ -133,7 +133,6 @@ function DataGrid({ columns }) {
     [showSelect]
   );
 
-  console.log(rows);
 
   const handleOnSelectionModelChange = (selection) => {
     dispatch({ type: "selection", payload: selection });
