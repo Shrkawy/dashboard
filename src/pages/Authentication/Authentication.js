@@ -7,9 +7,9 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import Loading from "../components/UI/Loading";
-import { AuthContext } from "../context";
-import { useHttpClint } from "../hooks/send-request";
+import Loading from "../../components/UI/Loading";
+import { AuthContext } from "../../context";
+import { useHttpClint } from "../../hooks/send-request";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -107,6 +107,16 @@ const Authentication = () => {
               <Typography variant="caption">
                 don't have account? signup
               </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.center}>
+              <Typography variant="caption">
+                demo account <br />
+                username: userone
+                <br />
+                password: I@muserOne1
+              </Typography>
+
+              <Typography variant="subtitle2"></Typography>
             </Grid>
           </Grid>
         </Paper>

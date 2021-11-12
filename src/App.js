@@ -16,9 +16,9 @@ const FixedLayout = lazy(() => import("./components/Layout/FixedLayout"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Orders = lazy(() => import("./pages/Orders"));
 const Products = lazy(() => import("./pages/Products"));
-const Customers = lazy(() => import("./pages/Customers"));
-const Messages = lazy(() => import("./pages/Messages"));
-const Settings = lazy(() => import("./pages/Settings"));
+const Customers = lazy(() => import("./pages/Customers/Customers"));
+const Messages = lazy(() => import("./pages/Messages/Messages"));
+const Settings = lazy(() => import("./pages/Settings/Settings"));
 const AddProduct = lazy(() => import("./pages/AddProduct"));
 const Authentication = lazy(() => import("./pages/Authentication"));
 

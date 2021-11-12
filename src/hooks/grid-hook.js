@@ -118,12 +118,12 @@ export function useGridContext() {
     dispatch({ type: "gridIsLoading", payload: true });
     try {
       const res = await sendRequest("get", gridAPIUrl);
-      console.log(res);
       if (error) {
         dispatch({ type: "rowsError", payload: error });
         dispatch({ type: "gridIsLoading", payload: false });
         return;
       }
+      console.log(res);
       dispatch({ type: "rows", payload: res.data });
       dispatch({ type: "gridIsLoading", payload: false });
     } catch (err) {}

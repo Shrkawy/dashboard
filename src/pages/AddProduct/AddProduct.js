@@ -1,17 +1,13 @@
 import { forwardRef } from "react";
-import * as yup from "yup";
 import { Button, Grid, Typography } from "@material-ui/core";
+import { FormProvider } from "react-hook-form";
 import { AttachMoney } from "@material-ui/icons";
 
-import { useForm } from "../hooks/form-hook";
-import { Categories, SubCategories } from "../data/Categories";
-import Paper from "../components/UI/Paper";
-import ImagePicker from "../components/form/ImagePicker";
-import Select from "../components/form/Select";
-import Input from "../components/form/Input";
-import Draft from "../components/form/Draft";
-import Tags from "../components/form/Tags";
-import { FormProvider } from "react-hook-form";
+import { schema } from "./ProductValidationSchema";
+import { useForm } from "../../hooks/form-hook";
+import { Categories, SubCategories } from "../../data/Categories";
+import Paper from "../../components/UI/Paper";
+import { Draft, Select, Input, ImagePicker, Tags } from "../../components/form";
 
 const initValues = {
   productName: "",
@@ -27,45 +23,13 @@ const initValues = {
   creator: "user1",
 };
 
-const schema = yup.object().shape({
-  productName: yup.string("Required").required("Required"),
-  category: yup.string("Required").required("Required"),
-  subCategory: yup.string("Required").required("Required"),
-  price: yup
-    .number("Required")
-    .typeError("you must specify a number")
-    .required("Required")
-    .positive("Positive values only")
-    .default(0),
-  originalPrice: yup
-    .number("price must be a number type")
-    .typeError("you must specify a number")
-    .required("Required")
-    .positive("Positive values only")
-    .default(0),
-  stock: yup
-    .number("Required")
-    .typeError("you must specify a number")
-    .integer()
-    .positive("Must be positive")
-    .required()
-    .default(0),
-  createdDate: yup.date().default(() => new Date()),
-  creator: yup.string().default(() => "user1"),
-  images: yup.array().min(1).required(),
-  description: yup.string().required(),
-});
-
 const AddProduct = forwardRef((props, ref) => {
   const { passedValues } = props;
   const methods = useForm(!passedValues ? initValues : passedValues, schema);
 
   return (
     <FormProvider {...methods}>
-      <Paper
-        component="form"
-        onSubmit={methods.handleSubmit(methods.onSubmit)}
-      >
+      <Paper component="form" onSubmit={methods.handleSubmit(methods.onSubmit)}>
         <Grid container spacing={5}>
           {/* Title */}
 

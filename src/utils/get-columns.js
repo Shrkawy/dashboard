@@ -31,15 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// function handleCellDelete(params) {
-//   console.log(params);
-// }
-
-// function handleCellEdit(params) {
-//   console.log(params);
-// }
-
-export const useGetColums = (orders, products, customers) => {
+export const GetColumns = (orders, products, customers) => {
   const classes = useStyles();
 
   const { handleCellDelete, handleCellEdit } = useGridActionButtons("products");

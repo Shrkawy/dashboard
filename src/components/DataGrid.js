@@ -1,8 +1,7 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import PropTypes from "prop-types";
 import { DataGrid as MuiDataGrid, GridToolbar } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core";
-import { useGetColums } from "../utils/get-columns";
 import { GridContext } from "../context";
 
 function customCheckbox(theme) {
@@ -113,24 +112,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DataGrid({ orders, products, customers }) {
+function DataGrid({ columns }) {
   const classes = useStyles();
 
   const { gridState, dispatch } = useContext(GridContext);
   const { selection, showSelect, rows } = gridState;
 
-  const columns = useGetColums(orders, products, customers);
+  const handleRowClick = useCallback(
+    async (params) => {
+      const { id } = params;
 
-  const handleRowClick = async (params) => {
-    const { id } = params;
+      // if in select mode -> select row.
+      if (showSelect) return;
 
-    // if in select mode -> select row.
-    if (showSelect) return;
+      // if not in select mode -> open details
+      dispatch({ type: "selectedItem", payload: id });
+      dispatch({ type: "openDialog" });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showSelect]
+  );
 
-    // if not in select mode -> open details
-    dispatch({ type: "selectedItem", payload: id });
-    dispatch({ type: "openDialog" });
-  };
+  console.log(rows);
 
   const handleOnSelectionModelChange = (selection) => {
     dispatch({ type: "selection", payload: selection });
@@ -158,9 +161,7 @@ function DataGrid({ orders, products, customers }) {
 }
 
 DataGrid.propTypes = {
-  products: PropTypes.bool,
-  orders: PropTypes.bool,
-  customers: PropTypes.bool,
+  columns: PropTypes.array,
 };
 
 export default DataGrid;

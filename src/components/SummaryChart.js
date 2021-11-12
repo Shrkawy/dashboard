@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, Typography } from "@material-ui/core";
-import Charts from "./charts/Charts";
 import Paper from "./UI/Paper";
+import { Summary } from "./charts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +17,7 @@ const SummaryChart = (props) => {
         {props.title}
       </Typography>
       <Typography variant="h6">{props.price}</Typography>
-      <Charts.Summary
+      <Summary
         data={props.data}
         lineColor={props.lineColor}
         fillColor={props.fillColor}

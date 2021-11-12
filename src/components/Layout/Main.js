@@ -13,8 +13,8 @@ import { Delete, SelectAll, AddCircleOutline } from "@material-ui/icons";
 import { GridContext } from "../../context";
 import Paper from "../UI/Paper";
 import Loading from "../UI/Loading";
-import { getDialogItemObject } from "../../utils/get-item-object";
-import ItemDialog from "../ItemDialog";
+import { getDialogItemObject } from "../ItemDialog/get-item-object";
+import ItemDialog from "../ItemDialog/ItemDialog";
 import Snackbar from "../UI/Snackbar";
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +38,9 @@ function Main({ title, children, APIUrl, products, orders, customers }) {
     gridState;
 
   let itemDetails;
+
+  console.log(gridState.dialogData);
+
   if (gridState.openDialog && gridState.dialogData) {
     itemDetails = getDialogItemObject(
       {

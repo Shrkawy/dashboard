@@ -1,10 +1,10 @@
 import { forwardRef, lazy, useContext, useEffect, useState } from "react";
 import { Button, Dialog, Grid, makeStyles, Slide } from "@material-ui/core";
 import { ArrowForward, DeleteForeverOutlined, Edit } from "@material-ui/icons";
-import Loading from "./UI/Loading";
-import { GridContext } from "../context";
-import ConfirmDialog from "./UI/ConfirmDialog";
-const ImageSlider = lazy(() => import("./UI/ImageSlider"));
+import Loading from "../UI/Loading";
+import { GridContext } from "../../context";
+import ConfirmDialog from "../UI/ConfirmDialog";
+const ImageSlider = lazy(() => import("../UI/ImageSlider"));
 
 const useStyles = makeStyles((theme) => ({
   dialogContainer: {
@@ -60,14 +60,14 @@ const Transition = forwardRef((props, ref) => {
 });
 
 /**
- * @param {object} item must path not empty Object
+ * @param {Object} item must path not empty Object
  */
 
 export default function ItemDialog({ item, isLoading }) {
   const classes = useStyles();
   const { gridState, dispatch } = useContext(GridContext);
-  const [openWorning, setOpenWorning] = useState(false);
-  const [confirmWorning, setConfirmWornong] = useState(false);
+  const [openWarning, setOpenWarning] = useState(false);
+  const [confirmWarning, setConfirmWarning] = useState(false);
 
   const handleHideClick = () => {
     dispatch({ type: "openDialog" });
@@ -76,12 +76,12 @@ export default function ItemDialog({ item, isLoading }) {
   };
 
   useEffect(() => {
-    if (confirmWorning) {
+    if (confirmWarning) {
       dispatch({ type: "deleteItem", payload: true });
-      setConfirmWornong(false);
+      setConfirmWarning(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [confirmWorning]);
+  }, [confirmWarning]);
 
   return (
     <Dialog
@@ -131,7 +131,7 @@ export default function ItemDialog({ item, isLoading }) {
                 size="medium"
                 variant="contained"
                 disableElevation
-                onClick={() => setOpenWorning(true)}
+                onClick={() => setOpenWarning(true)}
               >
                 Delete
               </Button>
@@ -156,9 +156,9 @@ export default function ItemDialog({ item, isLoading }) {
         )}
       </Grid>
       <ConfirmDialog
-        open={openWorning}
-        setOpen={setOpenWorning}
-        setConfirm={setConfirmWornong}
+        open={openWarning}
+        setOpen={setOpenWarning}
+        setConfirm={setConfirmWarning}
       />
     </Dialog>
   );

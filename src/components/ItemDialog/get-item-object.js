@@ -1,10 +1,13 @@
 export const getDialogItemObject = (item, itemData) => {
   const { products, orders, customers } = item;
+  console.log("item", item);
 
   if (orders) {
     return {
       ID: itemData._id,
-      Customer: `${itemData.customer.firstName} ${itemData.customer.lastName}`,
+      Customer: itemData.customer
+        ? `${itemData.customer.firstName} ${itemData.customer.lastName}`
+        : "not found",
       Discount: itemData.discount,
       "Original Price": itemData.originalPrice,
       "Final Price": itemData.finalPrice,
@@ -23,7 +26,9 @@ export const getDialogItemObject = (item, itemData) => {
       "Sub Category": itemData.subCategory,
       Price: itemData.price,
       OriginalPrice: itemData.originalPrice,
-      Revinue: `${itemData.price - itemData.originalPrice}`,
+      Revinue: itemData.price
+        ? `${itemData.price - itemData.originalPrice}`
+        : "-",
       Stock: itemData.stock,
       Sold: itemData?.sold,
       "Created At": itemData.createdAt,

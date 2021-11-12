@@ -1,12 +1,10 @@
 import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
-import Charts from "../components/charts/Charts";
-import SummaryChart from "../components/SummaryChart";
-import List from "../components/UI/List";
-import ChartsData from "../data/ChartsData";
-import ProductsData from "../data/ProductsData";
-import Paper from "../components/UI/Paper";
-// import ShowOnlyTable from "../components/RecentOrders";
-// import OrdersData from "../data/OrdersData";
+import { DoughnutChart, LineChart } from "../../components/charts";
+import SummaryChart from "../../components/SummaryChart";
+import List from "../../components/UI/List";
+import ChartsData from "../../data/ChartsData";
+import ProductsData from "../../data/ProductsData";
+import Paper from "../../components/UI/Paper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,7 +61,7 @@ const Dashboard = () => {
       <Grid item xs={12} md={12} lg={8}>
         <Paper>
           <Typography variant="h6">Revenue</Typography>
-          <Charts.LineChart data={ChartsData.Revenue} />
+          <LineChart data={ChartsData.Revenue} />
         </Paper>
       </Grid>
       <Grid item s={12} md={12} lg={4}>
@@ -74,7 +72,7 @@ const Dashboard = () => {
           <Typography variant="h6" paragraph>
             Product Status
           </Typography>
-          <Charts.DoughnutChart data={ChartsData.productStatus} />
+          <DoughnutChart data={ChartsData.productStatus} />
         </Paper>
       </Grid>
       {/* <Grid item xs={12} md={12} lg={8}>
